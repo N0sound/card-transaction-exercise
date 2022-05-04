@@ -1,0 +1,17 @@
+# Misc. Eclipse project files
+.classpath
+**/.classpath
+.project
+**/.project
+.settings
+**/.settings/
+.checkstyle
+**/.checkstyle
+*.pmd
+**/*.pmd
+.pydevproject
+**/.pydevproject
+.scala_dependencies
+**/.scala_dependencies
+
+/target/

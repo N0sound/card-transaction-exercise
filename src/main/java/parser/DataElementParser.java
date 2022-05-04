@@ -2,7 +2,7 @@ package parser;
 
 import model.Transaction.TransactionBuilder;;
 
-public interface DataElementParser {
+interface DataElementParser {
 
-	int parse(int index, String transaction, TransactionBuilder builder);
+    int parse(int index, String transaction, TransactionBuilder builder);
 }

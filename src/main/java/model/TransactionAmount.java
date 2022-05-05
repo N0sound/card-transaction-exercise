@@ -1,10 +1,8 @@
 package model;
 
-import lombok.Getter;
-import lombok.RequiredArgsConstructor;
+import lombok.Data;
 
-@Getter
-@RequiredArgsConstructor
+@Data
 public class TransactionAmount {
 
     private final String unformattedString;

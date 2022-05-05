@@ -1,10 +1,8 @@
 package model;
 
-import lombok.Builder;
-import lombok.Getter;
+import lombok.Data;
 
-@Builder
-@Getter
+@Data
 public class BitMap {
 
     private final int decimalValue;

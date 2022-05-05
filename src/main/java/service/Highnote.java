@@ -15,7 +15,7 @@ public class Highnote {
         String[] response = new String[transactions.length];
         for (int i = 0; i < transactions.length; i++) {
             var transaction = parser.parse(transactions[i]);
-            String responseCode = authorizor.getResponseCode(transaction);
+            var responseCode = authorizor.getResponseCode(transaction);
             response[i] = responseGenerator.generate(transaction, responseCode);
         }
         return response;

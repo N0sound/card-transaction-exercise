@@ -1,45 +1,46 @@
 package model;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.mockito.BDDMockito.given;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.Mock;
-import org.mockito.junit.jupiter.MockitoExtension;
 
-@ExtendWith(MockitoExtension.class)
 class TransactionTest {
 
-    private static final String CREDIT_CARD = "cc";
+    private static final String CREDIT_CARD_NUMBER = "cc";
     private static final String CARDHOLDER_NAME = "name";
     private static final String ZIP_CODE = "zipCode";
-
-    @Mock
-    private BitMap bitMap;
-    @Mock
-    private ExpirationDate expirationDate;
-    @Mock
-    private TransactionAmount transactionAmount;
+    private static final BitMap BIT_MAP = new BitMap(0, new boolean[1]);
 
     private Transaction fixture;
 
     @BeforeEach
     void init() {
-        fixture = Transaction.builder().creditCard(CREDIT_CARD).cardholderName(CARDHOLDER_NAME).zipCode(ZIP_CODE)
-                .bitMap(bitMap).expirationDate(expirationDate).transactionAmount(transactionAmount).build();
+        fixture = Transaction.builder().creditCardNumber(CREDIT_CARD_NUMBER).cardholderName(CARDHOLDER_NAME)
+                .zipCode(ZIP_CODE).bitMap(BIT_MAP).expirationDate(ExpirationDate.of("1122"))
+                .transactionAmount(TransactionAmount.of("00000000200")).build();
+    }
+
+    @Test
+    void shouldReturnFalseIfTransactionAmountMissing() {
+        fixture = Transaction.builder().bitMap(BIT_MAP).build();
+        assertFalse(fixture.hasAmount());
+    }
+
+    @Test
+    void shouldReturnFalseIfExpirationMillisMissing() {
+        fixture = Transaction.builder().bitMap(BIT_MAP).build();
+        assertFalse(fixture.hasExpirationMillis());
     }
 
     @Test
     void shouldReturnAmount() {
-        given(transactionAmount.getAmount()).willReturn(2L);
-        assertEquals(2L, fixture.getAmount());
+        assertEquals(200L, fixture.getAmount());
     }
 
     @Test
     void shouldReturnExpirationMillis() {
-        given(expirationDate.getExpirationMillis()).willReturn(4L);
-        assertEquals(4L, fixture.getExpirationMillis());
+        assertEquals(1669852799999L, fixture.getExpirationMillis());
     }
 }

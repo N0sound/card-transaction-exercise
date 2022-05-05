@@ -1,21 +1,18 @@
 package service;
 
+import model.ResponseCode;
 import model.Transaction;
 
 class Authorizor {
 
-    private static final String RESPONSE_CODE_DECLINED = "DE";
-    private static final String RESPONSE_CODE_ERROR = "ER";
-    private static final String RESPONSE_CODE_OK = "OK";
-
-    String getResponseCode(Transaction transaction) {
+    ResponseCode getResponseCode(Transaction transaction) {
         if (!hasMandatoryFields(transaction)) {
-            return RESPONSE_CODE_ERROR;
+            return ResponseCode.ERROR;
         }
         if (isAuthorizedForAmt(transaction) && transaction.getExpirationMillis() >= System.currentTimeMillis()) {
-            return RESPONSE_CODE_OK;
+            return ResponseCode.OK;
         }
-        return RESPONSE_CODE_DECLINED;
+        return ResponseCode.DECLINED;
     }
 
     private static boolean hasMandatoryFields(Transaction transaction) {

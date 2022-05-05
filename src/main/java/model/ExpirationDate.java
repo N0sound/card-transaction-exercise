@@ -3,11 +3,9 @@ package model;
 import java.time.LocalDateTime;
 import java.time.ZoneOffset;
 
-import lombok.Getter;
-import lombok.RequiredArgsConstructor;
+import lombok.Data;
 
-@Getter
-@RequiredArgsConstructor
+@Data
 public class ExpirationDate {
 
     private final String unformattedString;

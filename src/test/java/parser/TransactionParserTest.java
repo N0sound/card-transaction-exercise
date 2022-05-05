@@ -1,46 +1,56 @@
 package parser;
 
-import java.util.function.BiConsumer;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.mockito.BDDMockito.given;
 
+import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.ArgumentCaptor;
-import org.mockito.Captor;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import model.BitMap;
-import model.Transaction.TransactionBuilder;
+import model.ExpirationDate;
+import model.Transaction;
+import model.TransactionAmount;
 
 @ExtendWith(MockitoExtension.class)
 class TransactionParserTest {
 
+    // Do not mock DTOs; purpose of mocking is to make relationship and interactions between objects visible
     @Mock
     private BitMapParser bitMapParser;
-    @Mock
-    private BitMap bitMap;
-    @Mock
-    private BiConsumer<TransactionBuilder, String> consumer1, consumer2, consumer3, consumer4;
-    @Captor
-    private ArgumentCaptor<String> elementCaptor1, elementCaptor2, elementCaptor3, elementCaptor4;
+
     @InjectMocks
     private TransactionParser fixture;
 
-    // @Test
-    // void shouldReturnTransaction() {
-    // String transaction = "0110c1041212111212EDWARD SMITH12345";
-    // given(bitMapParser.parse(transaction)).willReturn(bitMap);
-    // given(bitMap.getDataElementParsers()).willReturn(List.of(new VariableLengthDataElementParser(consumer1),
-    // new FixedLengthDataElementParser(4, consumer2), new VariableLengthDataElementParser(consumer3),
-    // new FixedLengthDataElementParser(5, consumer4)));
-    // fixture.parse(transaction);
-    // then(consumer1).should().accept(any(), elementCaptor1.capture());
-    // then(consumer2).should().accept(any(), elementCaptor2.capture());
-    // then(consumer3).should().accept(any(), elementCaptor3.capture());
-    // then(consumer4).should().accept(any(), elementCaptor4.capture());
-    // assertEquals("041212", elementCaptor1.getValue());
-    // assertEquals("1112", elementCaptor2.getValue());
-    // assertEquals("12EDWARD SMITH", elementCaptor3.getValue());
-    // assertEquals("12345", elementCaptor4.getValue());
-    // }
+    @Test
+    void shouldReturnTransactionWithoutDataElements() {
+        var bitMap = new BitMap(0, new boolean[] { false, false, false, false, false, false, false, false });
+        Transaction expected = Transaction.builder().bitMap(bitMap).build();
+        String transaction = "011070";
+        given(bitMapParser.parse(transaction)).willReturn(bitMap);
+        assertEquals(expected, fixture.parse(transaction));
+    }
+
+    @Test
+    void shouldReturnTransactionWithSomeDataElements() {
+        var bitMap = new BitMap(0, new boolean[] { true, false, false, false, true, true, false, false });
+        Transaction expected = Transaction.builder().bitMap(bitMap).cardholderName("11MASTER YODA")
+                .creditCardNumber("165105105105105100").zipCode("90089").build();
+        String transaction = "0100ec16510510510510510011MASTER YODA90089";
+        given(bitMapParser.parse(transaction)).willReturn(bitMap);
+        assertEquals(expected, fixture.parse(transaction));
+    }
+
+    @Test
+    void shouldReturnTransaction() {
+        var bitMap = new BitMap(0, new boolean[] { true, true, true, false, true, true, false, false });
+        Transaction expected = Transaction.builder().bitMap(bitMap).cardholderName("11MASTER YODA")
+                .creditCardNumber("165105105105105100").expirationDate(ExpirationDate.of("1225"))
+                .transactionAmount(TransactionAmount.of("0000011000")).zipCode("90089").build();
+        String transaction = "0100ec1651051051051051001225000001100011MASTER YODA90089";
+        given(bitMapParser.parse(transaction)).willReturn(bitMap);
+        assertEquals(expected, fixture.parse(transaction));
+    }
 }

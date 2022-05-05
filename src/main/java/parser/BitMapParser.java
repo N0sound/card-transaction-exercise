@@ -1,10 +1,7 @@
 package parser;
 
-import lombok.RequiredArgsConstructor;
-
 import model.BitMap;
 
-@RequiredArgsConstructor
 public class BitMapParser {
 
     private static final int SIZE = 8;
@@ -12,7 +9,7 @@ public class BitMapParser {
     BitMap parse(String transaction) {
         int request = Integer.parseInt(transaction.substring(4, 6), 16);
         boolean[] dataElements = getDataElements(getBinary(request));
-        return BitMap.builder().dataElements(dataElements).decimalValue(request).build();
+        return new BitMap(request, dataElements);
     }
 
     private static String getBinary(int value) {

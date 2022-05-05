@@ -41,6 +41,6 @@ class TransactionTest {
 
     @Test
     void shouldReturnExpirationMillis() {
-        assertEquals(1669852799999L, fixture.getExpirationMillis());
+        assertEquals(1669852800000L, fixture.getExpirationMillis());
     }
 }

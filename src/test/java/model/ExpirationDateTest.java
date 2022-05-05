@@ -13,6 +13,6 @@ class ExpirationDateTest {
 
     @Test
     void shouldReturnExpirationDateMillisOfLastMillisOfTheMonth() {
-        assertEquals(1009843199999L, ExpirationDate.of("1201").getExpirationMillis());
+        assertEquals(1009843200000L, ExpirationDate.of("1201").getExpirationMillis());
     }
 }

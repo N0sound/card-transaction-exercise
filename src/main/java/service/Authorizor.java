@@ -9,7 +9,7 @@ class Authorizor {
         if (!hasMandatoryFields(transaction)) {
             return ResponseCode.ERROR;
         }
-        if (isAuthorizedForAmt(transaction) && transaction.getExpirationMillis() >= System.currentTimeMillis()) {
+        if (isAuthorizedForAmt(transaction) && transaction.getExpirationMillis() > System.currentTimeMillis()) {
             return ResponseCode.OK;
         }
         return ResponseCode.DECLINED;
